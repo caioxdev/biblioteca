@@ -28,7 +28,6 @@ Sistema de gerenciamento de empréstimos de livros desenvolvido como trabalho fi
 - CSS puro
 
 **Ambiente**
-- Docker Compose (MySQL containerizado)
 - Frontend e backend rodam localmente
 
 ## Estrutura do Projeto
