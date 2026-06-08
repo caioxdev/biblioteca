@@ -2,6 +2,24 @@
 
 Sistema de gerenciamento de empréstimos de livros desenvolvido como trabalho final da disciplina de Programação para Web.
 
+## Deploy & Links Oficiais
+
+O projeto foi totalmente migrado para a nuvem e está disponível para acesso público. Você pode testar a aplicação de ponta a ponta sem precisar rodar nada localmente:
+
+* **Frontend (Aplicação Web):** [Acesse aqui](https://biblioteca-two-sandy.vercel.app/)
+* **Backend (API em Node.js):** `https://biblioteca-production-893f.up.railway.app`
+* **Documentação da API (Swagger):** [Visualizar Rotas](https://biblioteca-production-893f.up.railway.app/docs)
+
+---
+
+### Tecnologias e Hospedagem
+
+| Camada | Tecnologia | Plataforma de Hospedagem | Status |
+| :--- | :--- | :--- | :--- |
+| **Frontend** | Vue 3 / Vite | [Vercel](https://vercel.com) | ![Vercel](https://img.shields.io/badge/Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white) |
+| **Backend** | Node.js / Express | [Railway](https://railway.app) | ![Railway](https://img.shields.io/badge/Railway-131415?style=for-the-badge&logo=railway&logoColor=white) |
+| **Banco de Dados** | MySQL | [Railway](https://railway.app) | ![MySQL](https://img.shields.io/badge/MySQL-00758F?style=for-the-badge&logo=mysql&logoColor=white) |
+
 ## Integrantes
 
 | Nome | GitHub |
@@ -28,7 +46,7 @@ Sistema de gerenciamento de empréstimos de livros desenvolvido como trabalho fi
 - CSS puro
 
 **Ambiente**
-- Frontend e backend rodam localmente
+- Configurado para deploy contínuo em nuvem e suporte a desenvolvimento local.
 
 ## Estrutura do Projeto
 ```txt
@@ -63,12 +81,12 @@ biblioteca/
 └── README.md
 ```
 
-## Como rodar
+## Como rodar localmente
 
 ### Pré-requisitos
 
 - Node.js 18+
-- MySQL Server instalado na máquina (porta padrão 3306)
+- MySQL Server instalado na máquina (caso queira rodar o banco local)
 
 ### 1. Clone o repositório
 
@@ -88,8 +106,7 @@ CREATE DATABASE IF NOT EXISTS biblioteca;
 cd backend
 npm install
 ```
-Crie o arquivo .env na raiz da pasta backend com base no .env.example. Altere as credenciais DB_USER e DB_PASSWORD para bater com as que você configurou no seu MySQL local:
-Snippet de código:
+Crie o arquivo .env na raiz da pasta backend com as suas credenciais locais ou utilize as variáveis fornecidas por algum integrante do projeto:
 ```txt
 DB_HOST=localhost
 DB_PORT=3306
@@ -99,7 +116,8 @@ DB_NAME=biblioteca
 JWT_SECRET=biblioteca_secreta_jwt
 PORT=3000
 ```
-Suba o servidor em modo de desenvolvimento (Nodemon):
+
+Suba o servidor em modo de desenvolvimento:
 ```bash
 npm run dev
 ```
@@ -109,11 +127,19 @@ npm run dev
 cd ../frontend
 npm install
 ```
-Crie o arquivo .env na raiz da pasta frontend com base no .env.example:
-Snippet de código:
+
+Crie o arquivo .env na raiz da pasta frontend. Você pode apontar tanto para a API local quanto para a API de produção no Railway:
+
+#### Para rodar com a API na nuvem:
+```bash
+VITE_API_URL=https://biblioteca-production-893f.up.railway.app
+```
+
+#### Ou para rodar com a API local:
 ```bash
 VITE_API_URL=http://localhost:3000
 ```
+
 Suba o frontend:
 ```bash
 npm run dev
