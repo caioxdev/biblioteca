@@ -1,3 +1,5 @@
+import path from 'path';
+import { fileURLToPath } from 'url';
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
@@ -13,8 +15,12 @@ import emprestimosRoutes from './src/routes/emprestimos.js';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
-const swaggerSpec = JSON.parse(fs.readFileSync('./swagger.json', 'utf8'));
+const swaggerSpec = JSON.parse(
+  fs.readFileSync(path.join(__dirname, 'swagger.json'), 'utf8')
+);
 
 app.use(cors());
 app.use(express.json());
