@@ -12,7 +12,7 @@
       textoBotaoPrincipal="Solicitar Empréstimo"
       corBotaoPrincipal="azul-escuro"
       :mostrar-botao-secundario="false"
-      @acao-principal="solicitarEmprestimo"
+      :desabilitar-quando-zero="true" @acao-principal="solicitarEmprestimo"
     />
   </main>
 </template>

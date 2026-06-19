@@ -41,6 +41,10 @@ defineProps({
   corBotaoSecundario: {
     type: String,
     default: 'vermelho'
+  },
+  desabilitarQuandoZero: {
+    type: Boolean,
+    default: false
   }
 })
 
@@ -76,7 +80,7 @@ const formatarValor = (chave, valor) => {
           </td>
           <td v-if="colunas.includes('ações') || colunas.includes('Ações')">
             <div :class="['acoes', { invertido: inverterBotoes }]">
-              <button v-if="mostrarBotaoPrincipal" :class="['btn-base', corBotaoPrincipal]" :disabled="item.quantidade_disponivel === 0" @click="emit('acao-principal', item)">
+              <button v-if="mostrarBotaoPrincipal" :class="['btn-base', corBotaoPrincipal]" :disabled="desabilitarQuandoZero && item.quantidade_disponivel === 0" @click="emit('acao-principal', item)">
                 {{ textoBotaoPrincipal }}
               </button>
               <button v-if="mostrarBotaoSecundario" :class="['btn-base', corBotaoSecundario]" @click="emit('acao-secundaria', item)">
