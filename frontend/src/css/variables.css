@@ -1,0 +1,37 @@
+:root {
+  /* cores base */
+  --cor-branco: #ffffff;
+  --cor-preto: #000000;
+
+  /* gradiente dos inputs */
+  --cor-input-borda: linear-gradient(180deg, #173156 0%, #001B3C 34%, #435671 70%, #8691A6 100%);
+
+  /* botão primário */
+  --cor-botao: linear-gradient(92deg, #001B3C 22.21%, #233D62 82.71%, #0E2C5B 100%);
+
+  /* header */
+  --cor-header-fundo: #F7FAFC;
+  --cor-header-borda: #C4C6CF;
+
+  /* aside */
+  --cor-aside-fundo: #F1F4F6;
+  --cor-aside-borda: #C4C6CF;
+  --cor-aside-texto: #586377;
+
+  /* textos */
+  --cor-texto-principal: #002045;
+
+  /* tipografia */
+  --fonte-padrao: 16px;
+  --f0: 10px;
+  --f1: 12px;
+  --f2: 14px;
+  --f3: 18px;
+  --f4: 24px;
+  --f5: 28px;
+  --f6: 48px;
+  --f7: 60px;
+
+  --fonte: 'Inter', sans-serif;
+  --fonte-login: 'Poppins', sans-serif;
+}

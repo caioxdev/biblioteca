@@ -1,0 +1,289 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Biblioteca API",
+    "version": "1.0.0",
+    "description": "API do sistema de gerenciamento de empréstimos de livros"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000",
+      "description": "Servidor Local"
+    },
+    {
+      "url": "https://biblioteca-production-893f.up.railway.app",
+      "description": "Servidor de Produção"
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  },
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ],
+  "paths": {
+    "/auth/registro": {
+      "post": {
+        "tags": ["Autenticação"],
+        "summary": "Registrar novo usuário",
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["nome", "email", "senha", "perfil"],
+                "properties": {
+                  "nome": { "type": "string", "example": "João Silva" },
+                  "email": { "type": "string", "example": "joao@email.com" },
+                  "senha": { "type": "string", "example": "123456" },
+                  "perfil": {
+                    "type": "string",
+                    "enum": ["leitor", "bibliotecario"],
+                    "example": "leitor"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Usuário criado com sucesso" },
+          "400": { "description": "Dados inválidos ou email já cadastrado" }
+        }
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "tags": ["Autenticação"],
+        "summary": "Realizar login",
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["email", "senha"],
+                "properties": {
+                  "email": { "type": "string", "example": "joao@email.com" },
+                  "senha": { "type": "string", "example": "123456" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Login realizado com sucesso (retorna token JWT)" },
+          "401": { "description": "Credenciais inválidas" }
+        }
+      }
+    },
+    "/livros": {
+      "get": {
+        "tags": ["Livros"],
+        "summary": "Listar todos os livros",
+        "responses": {
+          "200": { "description": "Lista de livros" }
+        }
+      },
+      "post": {
+        "tags": ["Livros"],
+        "summary": "Cadastrar novo livro (apenas bibliotecário)",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["titulo", "autor", "quantidade_disponivel"],
+                "properties": {
+                  "titulo": { "type": "string", "example": "Cálculo Diferencial e Integral" },
+                  "autor": { "type": "string", "example": "James Stewart" },
+                  "ano_publicacao": { "type": "integer", "example": 2016 },
+                  "quantidade_disponivel": { "type": "integer", "example": 10 }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Livro cadastrado com sucesso" },
+          "400": { "description": "Dados inválidos" },
+          "403": { "description": "Acesso negado (apenas bibliotecário)" }
+        }
+      }
+    },
+    "/livros/{id}": {
+      "put": {
+        "tags": ["Livros"],
+        "summary": "Atualizar livro (apenas bibliotecário)",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["titulo", "autor", "quantidade_disponivel"],
+                "properties": {
+                  "titulo": { "type": "string" },
+                  "autor": { "type": "string" },
+                  "ano_publicacao": { "type": "integer" },
+                  "quantidade_disponivel": { "type": "integer" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Livro atualizado com sucesso" },
+          "404": { "description": "Livro não encontrado" },
+          "403": { "description": "Acesso negado" }
+        }
+      },
+      "delete": {
+        "tags": ["Livros"],
+        "summary": "Remover livro (apenas bibliotecário)",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer" }
+          }
+        ],
+        "responses": {
+          "200": { "description": "Livro removido com sucesso" },
+          "400": { "description": "Não é possível excluir (empréstimos ativos)" },
+          "404": { "description": "Livro não encontrado" }
+        }
+      }
+    },
+    "/emprestimos": {
+      "get": {
+        "tags": ["Empréstimos"],
+        "summary": "Listar empréstimos",
+        "parameters": [
+          {
+            "name": "leitor_id",
+            "in": "query",
+            "required": false,
+            "schema": { "type": "integer" },
+            "description": "Filtrar por ID do leitor"
+          }
+        ],
+        "responses": {
+          "200": { "description": "Lista de empréstimos" }
+        }
+      },
+      "post": {
+        "tags": ["Empréstimos"],
+        "summary": "Solicitar novo empréstimo (apenas leitor)",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["livro_id", "leitor_id", "data_emprestimo", "data_devolucao_prevista"],
+                "properties": {
+                  "livro_id": { "type": "integer", "example": 1 },
+                  "leitor_id": { "type": "integer", "example": 2 },
+                  "data_emprestimo": {
+                    "type": "string",
+                    "format": "date",
+                    "example": "2026-06-19"
+                  },
+                  "data_devolucao_prevista": {
+                    "type": "string",
+                    "format": "date",
+                    "example": "2026-06-26"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Empréstimo realizado com sucesso" },
+          "400": { "description": "Dados inválidos ou livro indisponível" },
+          "403": { "description": "Acesso negado (apenas leitor)" }
+        }
+      }
+    },
+    "/emprestimos/{id}/devolver": {
+      "put": {
+        "tags": ["Empréstimos"],
+        "summary": "Confirmar devolução (apenas bibliotecário)",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["data_devolucao_real"],
+                "properties": {
+                  "data_devolucao_real": {
+                    "type": "string",
+                    "format": "date",
+                    "example": "2026-06-19"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Devolução confirmada com sucesso" },
+          "400": { "description": "Empréstimo já devolvido" },
+          "403": { "description": "Acesso negado (apenas bibliotecário)" },
+          "404": { "description": "Empréstimo não encontrado" }
+        }
+      }
+    },
+    "/emprestimos/{id}/solicitar-devolucao": {
+      "put": {
+        "tags": ["Empréstimos"],
+        "summary": "Solicitar devolução (apenas leitor)",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer" }
+          }
+        ],
+        "responses": {
+          "200": { "description": "Solicitação registrada com sucesso" },
+          "400": { "description": "Empréstimo não está ativo" },
+          "403": { "description": "Acesso negado (apenas leitor)" }
+        }
+      }
+    }
+  }
+}
